@@ -1,9 +1,9 @@
-﻿<Window x:Class="H_BridgeCommander.MainWindow"
+﻿<Window x:Class="MotorTester.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:H_BridgeCommander"
+        xmlns:local="clr-namespace:MotorTester"
         mc:Ignorable="d"
         Title="Motor Tester - Faulhaber - MCBL3006-S-RS" Height="333.299" Width="833.118">
     <Grid>

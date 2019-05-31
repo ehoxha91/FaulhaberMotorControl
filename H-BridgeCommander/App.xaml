@@ -1,7 +1,7 @@
-﻿<Application x:Class="H_BridgeCommander.App"
+﻿<Application x:Class="MotorTester.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:H_BridgeCommander"
+             xmlns:local="clr-namespace:MotorTester"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

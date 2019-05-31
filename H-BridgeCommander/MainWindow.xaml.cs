@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace H_BridgeCommander
+namespace MotorTester
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

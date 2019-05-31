@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace H_BridgeCommander.Properties
+namespace MotorTester.Properties
 {
 
 
