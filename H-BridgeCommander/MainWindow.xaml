@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Motor Tester - Faulhaber - MCBL3006-S-RS" Height="333.299" Width="833.118">
     <Grid>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="188" Margin="556,46,0,0" VerticalAlignment="Top" Width="205"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="166" Margin="218,46,0,0" VerticalAlignment="Top" Width="333"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="73" Margin="18,217,0,0" VerticalAlignment="Top" Width="533"/>
         <TextBox x:Name="txtRx" HorizontalAlignment="Left" Height="30" Margin="398,238,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="128"/>
@@ -51,11 +52,10 @@
         <TextBox x:Name="txtSR" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="643,168,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
         <Button x:Name="btnUpdateController" Background="Red" Content="Update" HorizontalAlignment="Left" Margin="643,200,0,0" VerticalAlignment="Top" Width="91"  Click="BtnUpdateController_Click"  Height="23" AutomationProperties.HelpText="Please be careful!"/>
         <CheckBox x:Name="chbVkp" HorizontalAlignment="Left" Height="16" Margin="739,56,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbVkp_Copy" HorizontalAlignment="Left" Height="16" Margin="739,83,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbVkp_Copy1" HorizontalAlignment="Left" Height="16" Margin="739,116,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbVkp_Copy2" HorizontalAlignment="Left" Height="16" Margin="739,143,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbVkp_Copy3" HorizontalAlignment="Left" Height="16" Margin="739,171,0,0" VerticalAlignment="Top" Width="18"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="188" Margin="556,46,0,0" VerticalAlignment="Top" Width="205"/>
+        <CheckBox x:Name="chbVki" HorizontalAlignment="Left" Height="16" Margin="739,83,0,0" VerticalAlignment="Top" Width="18"/>
+        <CheckBox x:Name="chbPkp" HorizontalAlignment="Left" Height="16" Margin="739,116,0,0" VerticalAlignment="Top" Width="18"/>
+        <CheckBox x:Name="chbPkd" HorizontalAlignment="Left" Height="16" Margin="739,143,0,0" VerticalAlignment="Top" Width="18"/>
+        <CheckBox x:Name="chbSR" HorizontalAlignment="Left" Height="16" Margin="739,171,0,0" VerticalAlignment="Top" Width="18"/>
         <Label Content="Ejup Hoxha; www.github.com/ehoxha91" HorizontalAlignment="Left" Height="26" Margin="556,264,0,0" VerticalAlignment="Top" Width="221"/>
 
     </Grid>

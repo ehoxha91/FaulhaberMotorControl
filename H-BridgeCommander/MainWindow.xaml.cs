@@ -1,4 +1,5 @@
-﻿using System.IO.Ports;
+﻿using System;
+using System.IO.Ports;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -94,17 +95,25 @@ namespace H_BridgeCommander
             reading = true;
             inData = string.Empty;
             byte[] readbytes = new byte[255];
+            char[] msgl = new char[200];
+            int count = 0;
            
             for (int i = 0; i < port.ReadBufferSize; i++)
             {
-                readbytes[i] = (byte)port.ReadByte();
-
+                msgl[i] = Convert.ToChar(port.ReadByte());
+                if (msgl[i] == '\n')
+                {
+                    count = i - 1;
+                    break;
+                }
             }
-            
-            inData = Encoding.ASCII.GetString(readbytes);
+            for (int i = 0; i < count; i++)
+            {
+                inData += inData + msgl[i];
+            }
             this.Dispatcher.Invoke(() =>
                 {
-                    txtRx.Text = inData;
+                    txtRx.Text = inData.ToString();
                 });
             reading = false;
         }
@@ -188,11 +197,16 @@ namespace H_BridgeCommander
 
         private void BtnUpdateController_Click(object sender, RoutedEventArgs e)
         {
-            port.WriteLine("POR" + txtVKp.Text);
-            port.WriteLine("I" + txtVKp.Text);
-            port.WriteLine("PP" + txtPKp.Text);
-            port.WriteLine("PD" + txtPKd.Text);
-            port.WriteLine("SR" + txtSR.Text);
+            if(chbVkp.IsChecked ==true)
+                port.WriteLine("POR" + txtVKp.Text);
+            if (chbVki.IsChecked == true)
+                port.WriteLine("I" + txtVKp.Text);
+            if (chbPkp.IsChecked == true)
+                port.WriteLine("PP" + txtPKp.Text);
+            if (chbPkd.IsChecked == true)
+                port.WriteLine("PD" + txtPKd.Text);
+            if (chbSR.IsChecked == true)
+                port.WriteLine("SR" + txtSR.Text);
         }
     }
 }
