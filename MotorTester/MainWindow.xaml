@@ -5,20 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MotorTester"
         mc:Ignorable="d"
-        Title="Motor Tester - Faulhaber - MCBL3006-S-RS" Height="337.536" Width="784.49">
-    <Grid>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="188" Margin="556,46,0,0" VerticalAlignment="Top" Width="205"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="166" Margin="218,46,0,0" VerticalAlignment="Top" Width="333"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="73" Margin="18,217,0,0" VerticalAlignment="Top" Width="533"/>
-        <TextBox x:Name="txtRx" HorizontalAlignment="Left" Height="30" Margin="398,238,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="128"/>
-        <Button Background="LightSalmon" Content="Send Command" HorizontalAlignment="Left" Margin="218,225,0,0" VerticalAlignment="Top" x:Name="btnSend" Width="109" Click="BtnSend_Click" Height="57"/>
+        Title="Motor Tester - Faulhaber - MCBL3006-S-RS" Height="411.511" Width="784.49"
+        WindowState="Normal" 
+        ResizeMode="NoResize">
+
+    <Grid Margin="-2,0,2,0">
+
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="19,220,0,0" Width="194" Height="151" VerticalAlignment="Top"/>
+        <Button x:Name="btnSetVelProfile" Background="LightSalmon" Content="SET VELOCITY" HorizontalAlignment="Left" VerticalAlignment="Top" Width="176"  Click="BtnSetVelProfile_Click"  Height="23" Margin="29,339,0,0"/>
+
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="188" Margin="543,46,0,0" VerticalAlignment="Top" Width="205"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="115" Margin="219,167,0,0" VerticalAlignment="Top" Width="319"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="115" Margin="218,46,0,0" VerticalAlignment="Top" Width="320"/>
+        <TextBox x:Name="txtRx" HorizontalAlignment="Left" Height="32" Margin="295,120,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="228"/>
+        <Button Background="LightSalmon" Content="Send Command" HorizontalAlignment="Left" Margin="414,59,0,0" VerticalAlignment="Top" x:Name="btnSend" Width="109" Click="BtnSend_Click" Height="52"/>
         <Button Content="Connect" HorizontalAlignment="Left" Margin="96,10,0,0" VerticalAlignment="Top" x:Name="btnConnect" Width="117" Click="BtnConnect_Click" Height="30"/>
-        <Label Content="Response" HorizontalAlignment="Left" Margin="332,238,0,0" VerticalAlignment="Top" Width="61" RenderTransformOrigin="0.501,1.114" Height="30"/>
+        <Label Content="Response" HorizontalAlignment="Left" Margin="229,120,0,0" VerticalAlignment="Top" Width="61" RenderTransformOrigin="0.501,1.114" Height="32"/>
         <ComboBox x:Name="cmbPorts" HorizontalAlignment="Left" Height="30" Margin="18,10,0,0" VerticalAlignment="Top" Width="73"/>
-        <ComboBox x:Name="cmbCommands" HorizontalAlignment="Left" Height="26" Margin="96,225,0,0" VerticalAlignment="Top" Width="109"/>
-        <Label Content="Command" HorizontalAlignment="Left" Margin="18,225,0,0" VerticalAlignment="Top" Width="73"/>
-        <TextBox x:Name="txtArg" HorizontalAlignment="Left" Height="26" Margin="96,256,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="109"/>
-        <Label Content="Argument" HorizontalAlignment="Left" Margin="18,256,0,0" VerticalAlignment="Top" Width="73"/>
+        <ComboBox x:Name="cmbCommands" HorizontalAlignment="Left" Height="26" Margin="294,55,0,0" VerticalAlignment="Top" Width="109"/>
+        <Label Content="Command" HorizontalAlignment="Left" Margin="223,55,0,0" VerticalAlignment="Top" Width="73"/>
+        <TextBox x:Name="txtArg" HorizontalAlignment="Left" Height="26" Margin="294,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="109"/>
+        <Label Content="Argument" HorizontalAlignment="Left" Margin="226,85,0,0" VerticalAlignment="Top" Width="73"/>
         <CheckBox x:Name="checkVelocity" Content="Velocity Mode" HorizontalAlignment="Left" Checked="CheckVelocity_Checked" Height="17" Margin="26,118,0,0" VerticalAlignment="Top" Width="105"/>
         <CheckBox x:Name="checkPosition" Content="Position Mode" HorizontalAlignment="Left" Checked="CheckPosition_Checked" Height="17" Margin="26,140,0,0" VerticalAlignment="Top" Width="105"/>
         <CheckBox x:Name="checkSRO0" Content="SRO0 - RS232 Control" HorizontalAlignment="Left" Checked="CheckSRO0_Checked" Height="17" Margin="26,52,0,0" VerticalAlignment="Top" Width="144"/>
@@ -29,35 +36,44 @@
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="48" Margin="18,166,0,0" VerticalAlignment="Top" Width="195"/>
         <CheckBox Content="Continous Mode - CONTMOD" HorizontalAlignment="Left" Margin="26,171,0,0" VerticalAlignment="Top" Width="187"/>
         <CheckBox Content="Stepper Motor - STEPMOD" HorizontalAlignment="Left" VerticalAlignment="Top" Width="187" Margin="26,191,0,0"/>
-        <Label Content="Set Velocity [rpm]" HorizontalAlignment="Left" Margin="247,52,0,0" VerticalAlignment="Top" Width="103"/>
-        <Label Content="Set Position" HorizontalAlignment="Left" Margin="277,77,0,0" VerticalAlignment="Top" Width="73"/>
-        <TextBox x:Name="txtVelocity" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="355,53,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <TextBox x:Name="txtPosition" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="355,80,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <Button x:Name="btnSetVel" Background="LightSalmon" Content="SET VELOCITY" HorizontalAlignment="Left" Margin="451,52,0,0" VerticalAlignment="Top" Width="89"  Click="BtnSetVel_Click"  Height="23"/>
-        <Button x:Name="btnSetPos" Background="LightGreen" Content="SET POSITION" HorizontalAlignment="Left" Margin="451,80,0,0" VerticalAlignment="Top" Width="89"  Click="BtnSetPos_Click"  Height="23"/>
-        <Label Content="Actual Velocity [rpm]" HorizontalAlignment="Left" Margin="225,105,0,0" VerticalAlignment="Top" Width="125"/>
-        <Label Content="Actual Position" HorizontalAlignment="Left" Margin="256,130,0,0" VerticalAlignment="Top" Width="91" RenderTransformOrigin="0.5,0.5"/>
-        <TextBox x:Name="txtActualVelocity" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="355,106,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <TextBox x:Name="txtActualPosition" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="355,133,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <Button x:Name="btnDefineHome" Background="LawnGreen"  Content="Define Home" HorizontalAlignment="Left" Height="22" Margin="451,133,0,0" VerticalAlignment="Top" Width="89"/>
-        <Label Content="Velocity Kp" RenderTransformOrigin="0.501,1.114" Margin="566,53,0,0" Width="72" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" />
-        <Label Content="Velocity Ki" RenderTransformOrigin="0.501,1.114" Margin="566,77,0,0" Width="72" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
-        <TextBox x:Name="txtVKp" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="643,53,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <TextBox x:Name="txtVKi" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="643,80,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <Label Content="Position Kp" RenderTransformOrigin="0.501,1.114" Margin="566,113,0,0" Width="72" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" />
-        <Label Content="Position Kd" RenderTransformOrigin="0.501,1.114" Margin="566,137,0,0" Width="72" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Label Content="Sample rate" RenderTransformOrigin="0.501,1.114" Margin="566,165,0,0" Width="72" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <TextBox x:Name="txtPKp" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="643,113,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <TextBox x:Name="txtPKd" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="643,140,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <TextBox x:Name="txtSR" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="643,168,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
-        <Button x:Name="btnUpdateController" Background="Red" Content="Update" HorizontalAlignment="Left" Margin="643,200,0,0" VerticalAlignment="Top" Width="91"  Click="BtnUpdateController_Click"  Height="23" AutomationProperties.HelpText="Please be careful!"/>
-        <CheckBox x:Name="chbVkp" HorizontalAlignment="Left" Height="16" Margin="739,56,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbVki" HorizontalAlignment="Left" Height="16" Margin="739,83,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbPkp" HorizontalAlignment="Left" Height="16" Margin="739,116,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbPkd" HorizontalAlignment="Left" Height="16" Margin="739,143,0,0" VerticalAlignment="Top" Width="18"/>
-        <CheckBox x:Name="chbSR" HorizontalAlignment="Left" Height="16" Margin="739,171,0,0" VerticalAlignment="Top" Width="18"/>
-        <Label Content="CCNY Robotics Lab" IsEnabled="True" Hyperlink.Click="Label_Click" HorizontalAlignment="Left" Height="26" Margin="654,10,0,0" VerticalAlignment="Top" Width="122"/>
-        <Button x:Name="btnSaveAll" Background="Red" Content="SAVE TO EEPROM" HorizontalAlignment="Left" Margin="556,239,0,0" VerticalAlignment="Top" Width="205"  Click="BtnSaveAll_Click"  Height="51" AutomationProperties.HelpText="Please be careful!"/>
+        <Label Content="Set Velocity [rpm]" HorizontalAlignment="Left" Margin="240,173,0,0" VerticalAlignment="Top" Width="102"/>
+        <Label Content="Set Position" HorizontalAlignment="Left" Margin="270,198,0,0" VerticalAlignment="Top" Width="72"/>
+        <TextBox x:Name="txtVelocity" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="347,174,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="88"/>
+        <TextBox x:Name="txtPosition" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="347,201,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="88"/>
+        <Button x:Name="btnSetVel" Background="LightSalmon" Content="SET VELOCITY" HorizontalAlignment="Left" Margin="440,173,0,0" VerticalAlignment="Top" Width="87"  Click="BtnSetVel_Click"  Height="23"/>
+        <Button x:Name="btnSetPos" Background="LightGreen" Content="SET POSITION" HorizontalAlignment="Left" Margin="440,201,0,0" VerticalAlignment="Top" Width="87"  Click="BtnSetPos_Click"  Height="23"/>
+        <Label Content="Actual Velocity [rpm]" HorizontalAlignment="Left" Margin="223,226,0,0" VerticalAlignment="Top" Width="121"/>
+        <Label Content="Actual Position" HorizontalAlignment="Left" Margin="255,251,0,0" VerticalAlignment="Top" Width="88" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox x:Name="txtActualVelocity" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="347,227,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="88"/>
+        <TextBox x:Name="txtActualPosition" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="347,254,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="88"/>
+        <Button x:Name="btnDefineHome" Background="LawnGreen"  Content="Define Home" HorizontalAlignment="Left" Height="22" Margin="440,254,0,0" VerticalAlignment="Top" Width="87"/>
+        <Label Content="Velocity Kp" RenderTransformOrigin="0.501,1.114" Margin="553,53,0,0" Width="72" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" />
+        <Label Content="Velocity Ki" RenderTransformOrigin="0.501,1.114" Margin="553,77,0,0" Width="72" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TextBox x:Name="txtVKp" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="630,53,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
+        <TextBox x:Name="txtVKi" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="630,80,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
+        <Label Content="Position Kp" RenderTransformOrigin="0.501,1.114" Margin="553,113,0,0" Width="72" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" />
+        <Label Content="Position Kd" RenderTransformOrigin="0.501,1.114" Margin="553,137,0,0" Width="72" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Content="Sample rate" RenderTransformOrigin="0.501,1.114" Margin="553,165,0,0" Width="72" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TextBox x:Name="txtPKp" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="630,113,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
+        <TextBox x:Name="txtPKd" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="630,140,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
+        <TextBox x:Name="txtSR" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="630,168,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="91"/>
+        <Button x:Name="btnUpdateController" Background="Red" Content="Update" HorizontalAlignment="Left" Margin="630,200,0,0" VerticalAlignment="Top" Width="91"  Click="BtnUpdateController_Click"  Height="23" AutomationProperties.HelpText="Please be careful!"/>
+        <CheckBox x:Name="chbVkp" HorizontalAlignment="Left" Height="16" Margin="726,56,0,0" VerticalAlignment="Top" Width="18"/>
+        <CheckBox x:Name="chbVki" HorizontalAlignment="Left" Height="16" Margin="726,83,0,0" VerticalAlignment="Top" Width="18"/>
+        <CheckBox x:Name="chbPkp" HorizontalAlignment="Left" Height="16" Margin="726,116,0,0" VerticalAlignment="Top" Width="18"/>
+        <CheckBox x:Name="chbPkd" HorizontalAlignment="Left" Height="16" Margin="726,143,0,0" VerticalAlignment="Top" Width="18"/>
+        <CheckBox x:Name="chbSR" HorizontalAlignment="Left" Height="16" Margin="726,171,0,0" VerticalAlignment="Top" Width="18"/>
+        <Label Content="©CCNY Robotics Lab" IsEnabled="True" MouseDoubleClick="Label_MouseDoubleClick" HorizontalAlignment="Left" Height="26" Margin="640,344,0,0" VerticalAlignment="Top" Width="128"/>
+        <Button x:Name="btnSaveAll" Background="Red" Content="SAVE TO EEPROM" HorizontalAlignment="Left" Margin="543,239,0,0" VerticalAlignment="Top" Width="205"  Click="BtnSaveAll_Click"  Height="43" AutomationProperties.HelpText="Please be careful!"/>
+        <Label Content="Ramp - Velocity Mode" HorizontalAlignment="Left" Margin="19,220,0,0" VerticalAlignment="Top" Width="128" RenderTransformOrigin="0.501,1.114" Height="30"/>
+        <Label Content="Acceleration [1/s^2]" HorizontalAlignment="Left" Height="28" Margin="19,250,0,0" VerticalAlignment="Top" Width="122"/>
+        <Label Content="Deceleration [1/s^2]" HorizontalAlignment="Left" Height="28" Margin="19,278,0,0" VerticalAlignment="Top" Width="122"/>
+        <TextBox x:Name="txtAv" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="146,255,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59"/>
+        <TextBox x:Name="txtDv" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="146,283,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59"/>
+        <Label Content="Max Velocity [rpm]" HorizontalAlignment="Left" Height="28" Margin="29,306,0,0" VerticalAlignment="Top" Width="114"/>
+        <TextBox x:Name="txtVmode_max" TextChanged="Txt_TextChanged" HorizontalAlignment="Left" Height="23" Margin="146,311,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="59"/>
+        <Button Name="btnRecord" Content="Record" HorizontalAlignment="Left" Height="30" Margin="219,340,0,0" VerticalAlignment="Top" Width="125" Click="BtnRecord_Click"/>
+
 
     </Grid>
 </Window>

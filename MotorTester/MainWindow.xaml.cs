@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.IO.Ports;
 using System.Text;
 using System.Windows;
@@ -14,6 +15,11 @@ namespace MotorTester
     {
         SerialPort port;
         System.Timers.Timer refreshTimer;
+        bool recording_to_file = false;
+
+        string[] file_lines;
+        int count_lines = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -23,6 +29,8 @@ namespace MotorTester
                 cmbPorts.Items.Add(prt);
             }
 
+
+            #region COMMANDS COMBOBOX
             cmbCommands.Items.Add("EN");
             cmbCommands.Items.Add("DI");
             cmbCommands.Items.Add("V");
@@ -51,71 +59,124 @@ namespace MotorTester
             cmbCommands.Items.Add("TEM"); // Read temp.
             cmbCommands.Items.Add("OST"); // Operation Status; 
                                           // Check page 90, communication manual for the responses
+            #endregion
 
-            refreshTimer = new System.Timers.Timer(1000);
+            refreshTimer = new System.Timers.Timer(2000);
             refreshTimer.Elapsed += RefreshTimer_Elapsed;
         }
 
-        bool reading = true;
+        private READ reading_decode = READ.GENERAL;
         private void RefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             refreshTimer.Stop();
-            //Command to read something from the port HBridge!
-            byte[] transmit = { };
-            port.Write(transmit, 0, transmit.Length);
-            while (reading) { }
+
+            port.WriteLine("POS");
+            reading_decode = READ.POSITON;
+            while (reading_decode == READ.POSITON) { }
+
+            port.WriteLine("V");
+            reading_decode = READ.VELOCITY;
+            while (reading_decode == READ.VELOCITY) { }
+            reading_decode = READ.GENERAL;
+            if (recording_to_file)
+            {
+                string tmp_string = txtActualPosition.Text + "; " + txtActualVelocity + "; "
+                                    + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString()
+                                    + ":" + DateTime.Now.Millisecond.ToString();
+                file_lines[count_lines] = tmp_string;
+                count_lines++;
+            }
             refreshTimer.Start();
         }
 
+        /// <summary>
+        /// Costum commands from combobox and input field.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
             port.WriteLine(cmbCommands.SelectedValue.ToString());
         }
 
+        /// <summary>
+        /// Open Serial Port; Start synchronous timer that reads the position and velocity.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnConnect_Click(object sender, RoutedEventArgs e)
         {
-            port = new SerialPort(cmbPorts.SelectedValue.ToString(), 9600, Parity.None, 8, StopBits.One);
-            port.DataReceived += Port_DataReceived;
-            port.Open();
-            if(port.IsOpen)
+            if (cmbPorts.SelectedValue.ToString() != string.Empty)
             {
-                
-                this.Dispatcher.Invoke(() => 
+                port = new SerialPort(cmbPorts.SelectedValue.ToString(), 9600, Parity.None, 8, StopBits.One);
+                port.DataReceived += Port_DataReceived;
+                port.Open();
+                if (port.IsOpen)
                 {
-                    btnConnect.Background = Brushes.LightGreen;
-                    btnConnect.IsEnabled = false;
-                });
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        btnConnect.Background = Brushes.LightGreen;
+                        btnConnect.IsEnabled = false;
+                    });
+                }
+                refreshTimer.Start();
             }
-            refreshTimer.Start();
         }
 
-        string inData = string.Empty;
+        /// <summary>
+        /// Handle received messages from serial port!
+        /// Synchronized from the client.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="Se"></param>
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs Se)
         {
-            reading = true;
-            inData = string.Empty;
-            byte[] readbytes = new byte[255];
-            char[] msgl = new char[200];
+            string generalData = string.Empty;
+            string position_read = string.Empty;
+            string velocity_read = string.Empty;
             int count = 0;
-           
+            char[] message_read = new char[100];
+
             for (int i = 0; i < port.ReadBufferSize; i++)
             {
-                msgl[i] = Convert.ToChar(port.ReadByte());
-                if (msgl[i] == '\n')
-                {
-                    count = i - 1;
-                    break;
-                }
+                count = i;
+                message_read[i] = Convert.ToChar(port.ReadByte());
+                if (message_read[i] == '\n')
+                { count = i - 1; break; }
             }
             for (int i = 0; i < count; i++)
             {
-                inData += inData + msgl[i];
+                generalData += generalData + message_read[i];
             }
-            this.Dispatcher.Invoke(() =>
-                {
-                    txtRx.Text = inData.ToString();
-                });
-            reading = false;
+
+            switch (reading_decode)
+            {
+                case READ.POSITON:
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        txtActualPosition.Text = generalData;
+                    });
+                    break;
+                case READ.VELOCITY:
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        txtActualVelocity.Text = generalData;
+                    });
+                    break;
+                case READ.GENERAL:
+                    this.Dispatcher.Invoke(() =>
+                        {
+                            txtRx.Text = generalData;
+                        });
+                    break;
+                default:
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        txtRx.Text = generalData;
+                    });
+                    break;
+            }
         }
 
         /// <summary>
@@ -145,7 +206,6 @@ namespace MotorTester
             checkSRO0.IsChecked = false;
         }
 
-
         /// <summary>
         /// Velocity Mode or Position Mode.
         /// </summary>
@@ -172,10 +232,9 @@ namespace MotorTester
             checkPosition.IsChecked = false;
         }
 
-
         //TODO: still need to test position part, even thought we may not need it.
         /// <summary>
-        /// Button Even handlers, changes velocity and/or relative position
+        /// Button Even handlers, changes velocity and/or relative position.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -206,13 +265,18 @@ namespace MotorTester
         /// <param name="e"></param>
         private void Txt_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(((TextBox)sender).Text, "[^0-9]"))
+            if (System.Text.RegularExpressions.Regex.IsMatch(((System.Windows.Controls.TextBox)sender).Text, "[^0-9]"))
             {
-                MessageBox.Show("Please enter only numbers.");
-                ((TextBox)sender).Text = ((TextBox)sender).Text.Remove(((TextBox)sender).Text.Length - 1);
+                System.Windows.MessageBox.Show("Please enter only numbers.");
+                ((System.Windows.Controls.TextBox)sender).Text = ((System.Windows.Controls.TextBox)sender).Text.Remove(((System.Windows.Controls.TextBox)sender).Text.Length - 1);
             }
         }
 
+        /// <summary>
+        /// Update Position(PD), Velocity Filters(PI) and sampling rate.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnUpdateController_Click(object sender, RoutedEventArgs e)
         {
             if(chbVkp.IsChecked ==true)
@@ -227,10 +291,52 @@ namespace MotorTester
                 port.WriteLine("SR" + txtSR.Text);
         }
 
-        private void Label_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Open Github page;
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             System.Diagnostics.Process.Start("www.github.com/ehoxha91");
         }
 
+        private void BtnSetVelProfile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnRecord_Click(object sender, RoutedEventArgs e)
+        {
+            if (recording_to_file == false)
+            {
+                recording_to_file = true;
+                btnRecord.Background = Brushes.Red;
+            }
+            else
+            {
+                recording_to_file = false;
+                btnRecord.Background = Brushes.LightGray;
+
+                var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                dialog.ShowDialog();
+                string path = dialog.SelectedPath + @"\pos_vel_time.txt";
+                using (StreamWriter file = new StreamWriter(@path, true))
+                {
+                    for (int i = 0; i < count_lines; i++)
+                    {
+                        file.WriteLine(file_lines[i]);
+                    }
+                }
+
+            }
+        }
+    }
+
+    public enum READ
+    {
+        GENERAL = 0,
+        POSITON = 1,
+        VELOCITY = 2
     }
 }
