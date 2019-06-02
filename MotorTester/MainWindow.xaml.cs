@@ -32,7 +32,6 @@ namespace MotorTester
             cmbCommands.Items.Add("STEPMOD");
             cmbCommands.Items.Add("APCMOD");
             cmbCommands.Items.Add("ENCMOD");
-
             cmbCommands.Items.Add("VOLTMOD");
             cmbCommands.Items.Add("LA");
             cmbCommands.Items.Add("LR");
@@ -56,6 +55,7 @@ namespace MotorTester
             refreshTimer = new System.Timers.Timer(1000);
             refreshTimer.Elapsed += RefreshTimer_Elapsed;
         }
+
         bool reading = true;
         private void RefreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -129,14 +129,20 @@ namespace MotorTester
         private void CheckSRO0_Checked(object sender, RoutedEventArgs e)
         {
             port.WriteLine("SRO0");
+            checkSRO1.IsChecked = false;
+            checkSRO2.IsChecked = false;
         }
         private void CheckSRO1_Checked(object sender, RoutedEventArgs e)
         {
             port.WriteLine("SRO1");
+            checkSRO0.IsChecked = false;
+            checkSRO2.IsChecked = false;
         }
         private void CheckSRO2_Checked(object sender, RoutedEventArgs e)
         {
             port.WriteLine("SRO2");
+            checkSRO1.IsChecked = false;
+            checkSRO0.IsChecked = false;
         }
 
 
@@ -153,6 +159,7 @@ namespace MotorTester
                 int a;
             }
             port.WriteLine("M");
+            checkVelocity.IsChecked = false;
         }
         private void CheckVelocity_Checked(object sender, RoutedEventArgs e)
         {
@@ -162,6 +169,7 @@ namespace MotorTester
                 int a;
             }
             port.WriteLine("M");
+            checkPosition.IsChecked = false;
         }
 
 
@@ -179,6 +187,16 @@ namespace MotorTester
         private void BtnSetPos_Click(object sender, RoutedEventArgs e)
         {
             port.WriteLine("POS" + txtPosition.Text);
+        }
+      
+        /// <summary>
+        /// Write the settings to EEPROM - Be careful don't exced 10000 writings!
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnSaveAll_Click(object sender, RoutedEventArgs e)
+        {
+            port.WriteLine("EEPSAV");
         }
 
         /// <summary>
@@ -208,5 +226,11 @@ namespace MotorTester
             if (chbSR.IsChecked == true)
                 port.WriteLine("SR" + txtSR.Text);
         }
+
+        private void Label_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("www.github.com/ehoxha91");
+        }
+
     }
 }

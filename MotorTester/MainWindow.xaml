@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MotorTester"
         mc:Ignorable="d"
-        Title="Motor Tester - Faulhaber - MCBL3006-S-RS" Height="333.299" Width="833.118">
+        Title="Motor Tester - Faulhaber - MCBL3006-S-RS" Height="337.536" Width="784.49">
     <Grid>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="188" Margin="556,46,0,0" VerticalAlignment="Top" Width="205"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="166" Margin="218,46,0,0" VerticalAlignment="Top" Width="333"/>
@@ -56,7 +56,8 @@
         <CheckBox x:Name="chbPkp" HorizontalAlignment="Left" Height="16" Margin="739,116,0,0" VerticalAlignment="Top" Width="18"/>
         <CheckBox x:Name="chbPkd" HorizontalAlignment="Left" Height="16" Margin="739,143,0,0" VerticalAlignment="Top" Width="18"/>
         <CheckBox x:Name="chbSR" HorizontalAlignment="Left" Height="16" Margin="739,171,0,0" VerticalAlignment="Top" Width="18"/>
-        <Label Content="Ejup Hoxha; www.github.com/ehoxha91" HorizontalAlignment="Left" Height="26" Margin="556,264,0,0" VerticalAlignment="Top" Width="221"/>
+        <Label Content="CCNY Robotics Lab" IsEnabled="True" Hyperlink.Click="Label_Click" HorizontalAlignment="Left" Height="26" Margin="654,10,0,0" VerticalAlignment="Top" Width="122"/>
+        <Button x:Name="btnSaveAll" Background="Red" Content="SAVE TO EEPROM" HorizontalAlignment="Left" Margin="556,239,0,0" VerticalAlignment="Top" Width="205"  Click="BtnSaveAll_Click"  Height="51" AutomationProperties.HelpText="Please be careful!"/>
 
     </Grid>
 </Window>
