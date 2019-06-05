@@ -16,7 +16,6 @@ namespace MotorTester
         SerialPort port;
         System.Timers.Timer refreshTimer;
         bool recording_to_file = false;
-
         string[] file_lines;
         int count_lines = 0;
 
@@ -36,6 +35,7 @@ namespace MotorTester
             cmbCommands.Items.Add("V");
             cmbCommands.Items.Add("HALLSPEED");
             cmbCommands.Items.Add("ENCSPEED");
+            cmbCommands.Items.Add("ENCRES");
             cmbCommands.Items.Add("CONTMOD");
             cmbCommands.Items.Add("STEPMOD");
             cmbCommands.Items.Add("APCMOD");
@@ -61,6 +61,24 @@ namespace MotorTester
                                           // Check page 90, communication manual for the responses
             #endregion
 
+            #region Address/Network Combobox
+            cmbAddress.Items.Add(0);
+            cmbAddress.Items.Add(1);
+            cmbAddress.Items.Add(2);
+            cmbAddress.Items.Add(3);
+            cmbAddress.Items.Add(4);
+            cmbAddress.Items.Add(5);
+            cmbAddress.Items.Add(6);
+            cmbAddress.Items.Add(7);
+            cmbAddress.Items.Add(8);
+            cmbAddress.Items.Add(9);
+            cmbAddress.Items.Add(10);
+
+            cmbConnection.Items.Add("Single");
+            cmbConnection.Items.Add("Network");
+            #endregion
+
+            
             refreshTimer = new System.Timers.Timer(2000);
             refreshTimer.Elapsed += RefreshTimer_Elapsed;
         }
@@ -80,12 +98,13 @@ namespace MotorTester
             reading_decode = READ.GENERAL;
             if (recording_to_file)
             {
-                string tmp_string = txtActualPosition.Text + "; " + txtActualVelocity + "; "
+                string tmp_string = txtActualPosition.Text + "; " + txtActualVelocity.Text + "; "
                                     + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString()
                                     + ":" + DateTime.Now.Millisecond.ToString();
                 file_lines[count_lines] = tmp_string;
                 count_lines++;
             }
+
             refreshTimer.Start();
         }
 
@@ -96,7 +115,8 @@ namespace MotorTester
         /// <param name="e"></param>
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
-            port.WriteLine(cmbCommands.SelectedValue.ToString());
+            if (txtArg.Text == string.Empty) port.WriteLine(cmbCommands.SelectedValue.ToString());
+            else port.WriteLine(cmbCommands.SelectedValue.ToString()+txtArg.Text);
         }
 
         /// <summary>
@@ -108,19 +128,29 @@ namespace MotorTester
         {
             if (cmbPorts.SelectedValue.ToString() != string.Empty)
             {
-                port = new SerialPort(cmbPorts.SelectedValue.ToString(), 9600, Parity.None, 8, StopBits.One);
-                port.DataReceived += Port_DataReceived;
-                port.Open();
                 if (port.IsOpen)
                 {
-
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        btnConnect.Background = Brushes.LightGreen;
-                        btnConnect.IsEnabled = false;
-                    });
+                    port.Close(); 
+                    port.DataReceived -= Port_DataReceived;
+                    refreshTimer.Stop();
+                    btnConnect.Background = Brushes.LightGray;
+                    btnConnect.Content = "Connect";
                 }
-                refreshTimer.Start();
+                else
+                {
+                    port.DataReceived += Port_DataReceived;
+                    port.Open();
+                    if (port.IsOpen)
+                    {
+
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            btnConnect.Background = Brushes.LightGreen;
+                            btnConnect.Content = "Disconnect";
+                        });
+                    }
+                    refreshTimer.Start();
+                }
             }
         }
 
@@ -132,23 +162,7 @@ namespace MotorTester
         /// <param name="Se"></param>
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs Se)
         {
-            string generalData = string.Empty;
-            string position_read = string.Empty;
-            string velocity_read = string.Empty;
-            int count = 0;
-            char[] message_read = new char[100];
-
-            for (int i = 0; i < port.ReadBufferSize; i++)
-            {
-                count = i;
-                message_read[i] = Convert.ToChar(port.ReadByte());
-                if (message_read[i] == '\n')
-                { count = i - 1; break; }
-            }
-            for (int i = 0; i < count; i++)
-            {
-                generalData += generalData + message_read[i];
-            }
+            string generalData = port.ReadTo("\n");
 
             switch (reading_decode)
             {
@@ -157,24 +171,28 @@ namespace MotorTester
                     {
                         txtActualPosition.Text = generalData;
                     });
+                    reading_decode = READ.VELOCITY;
                     break;
                 case READ.VELOCITY:
                     this.Dispatcher.Invoke(() =>
                     {
                         txtActualVelocity.Text = generalData;
                     });
+                    reading_decode = READ.GENERAL;
                     break;
                 case READ.GENERAL:
                     this.Dispatcher.Invoke(() =>
                         {
                             txtRx.Text = generalData;
                         });
+                    reading_decode = READ.POSITON;
                     break;
                 default:
                     this.Dispatcher.Invoke(() =>
                     {
                         txtRx.Text = generalData;
                     });
+                    reading_decode = READ.POSITON;
                     break;
             }
         }
@@ -207,7 +225,7 @@ namespace MotorTester
         }
 
         /// <summary>
-        /// Velocity Mode or Position Mode.
+        /// Velocity Mode, Encoder Mode or Position Mode.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -220,16 +238,19 @@ namespace MotorTester
             }
             port.WriteLine("M");
             checkVelocity.IsChecked = false;
+            chbENCMODE.IsChecked = false;
         }
         private void CheckVelocity_Checked(object sender, RoutedEventArgs e)
         {
             port.WriteLine("V0");
-            for (int i = 0; i < 1000; i++)
-            {
-                int a;
-            }
-            port.WriteLine("M");
             checkPosition.IsChecked = false;
+            chbENCMODE.IsChecked = false;
+        }
+        private void ChbENCMODE_Checked(object sender, RoutedEventArgs e)
+        {
+            port.WriteLine("ENCMODE");
+            checkPosition.IsChecked = false;
+            checkVelocity.IsChecked = false;
         }
 
         //TODO: still need to test position part, even thought we may not need it.
@@ -240,14 +261,18 @@ namespace MotorTester
         /// <param name="e"></param>
         private void BtnSetVel_Click(object sender, RoutedEventArgs e)
         {
-            string msg = "V" + txtVelocity.Text;
-            port.WriteLine(msg);
+            port.WriteLine("V" + txtVelocity.Text);
         }
         private void BtnSetPos_Click(object sender, RoutedEventArgs e)
         {
-            port.WriteLine("POS" + txtPosition.Text);
+            port.WriteLine("LR"+ txtPosition.Text);
+            for (int i = 0; i < 1000; i++)
+            {
+                
+            }
+            port.WriteLine("M");
         }
-      
+
         /// <summary>
         /// Write the settings to EEPROM - Be careful don't exced 10000 writings!
         /// </summary>
@@ -255,6 +280,7 @@ namespace MotorTester
         /// <param name="e"></param>
         private void BtnSaveAll_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("Don't do this more than 10000 times!");
             port.WriteLine("EEPSAV");
         }
 
@@ -303,7 +329,20 @@ namespace MotorTester
 
         private void BtnSetVelProfile_Click(object sender, RoutedEventArgs e)
         {
+            port.WriteLine("AC" + txtAv.Text);
+            for (int i = 0; i < 1000; i++)
+            {
 
+            }
+            port.WriteLine("DEC" + txtDv.Text);
+            for (int i = 0; i < 1000; i++)
+            {
+
+            }
+            if(txtVmode_max.Text != string.Empty)
+            {
+                port.WriteLine("SP" + txtVmode_max.Text);
+            }
         }
 
         private void BtnRecord_Click(object sender, RoutedEventArgs e)
@@ -329,6 +368,46 @@ namespace MotorTester
                     }
                 }
 
+            }
+        }
+
+        private void CmbPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            port = new SerialPort(cmbPorts.SelectedValue.ToString(), 9600, Parity.None, 8, StopBits.One);
+            btnConnect.IsEnabled = true;
+        }
+
+
+        /// <summary>
+        /// Speed sensor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChbEncSpeed_Checked(object sender, RoutedEventArgs e)
+        {
+            port.WriteLine("ENCSPEED");
+            chbHallSpeed.IsChecked = false;
+        }
+        private void ChbHallSpeed_Checked(object sender, RoutedEventArgs e)
+        {
+            port.WriteLine("HALLSPEED");
+            chbEncSpeed.IsChecked = false;
+        }
+
+        private void CmbAddress_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            port.WriteLine("NODEADR"+cmbAddress.SelectedValue.ToString());
+        }
+
+        private void CmbConnection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(cmbConnection.SelectedValue.ToString()=="Single")
+            {
+                port.WriteLine("NET0");
+            }
+            else
+            {
+                port.WriteLine("NET1");
             }
         }
     }
