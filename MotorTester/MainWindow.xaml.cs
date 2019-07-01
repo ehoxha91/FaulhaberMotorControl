@@ -78,7 +78,7 @@ namespace MotorTester
             cmbConnection.Items.Add("Network");
             #endregion
 
-            
+
             refreshTimer = new System.Timers.Timer(2000);
             refreshTimer.Elapsed += RefreshTimer_Elapsed;
         }
@@ -116,7 +116,7 @@ namespace MotorTester
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
             if (txtArg.Text == string.Empty) port.WriteLine(cmbCommands.SelectedValue.ToString());
-            else port.WriteLine(cmbCommands.SelectedValue.ToString()+txtArg.Text);
+            else port.WriteLine(cmbCommands.SelectedValue.ToString() + txtArg.Text);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace MotorTester
             {
                 if (port.IsOpen)
                 {
-                    port.Close(); 
+                    port.Close();
                     port.DataReceived -= Port_DataReceived;
                     refreshTimer.Stop();
                     btnConnect.Background = Brushes.LightGray;
@@ -265,10 +265,10 @@ namespace MotorTester
         }
         private void BtnSetPos_Click(object sender, RoutedEventArgs e)
         {
-            port.WriteLine("LR"+ txtPosition.Text);
+            port.WriteLine("LR" + txtPosition.Text);
             for (int i = 0; i < 1000; i++)
             {
-                
+
             }
             port.WriteLine("M");
         }
@@ -285,13 +285,17 @@ namespace MotorTester
         }
 
         /// <summary>
-        /// Makes sure that inputs are correct(numbers only).
+        /// Makes sure that inputs are correct(signed numbers only).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Txt_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(((System.Windows.Controls.TextBox)sender).Text, "[^0-9]"))
+            string _arg = ((System.Windows.Controls.TextBox)sender).Text;
+            char first_c = ' ';
+            if (_arg != string.Empty)
+               first_c = _arg[0];
+            if (System.Text.RegularExpressions.Regex.IsMatch(((System.Windows.Controls.TextBox)sender).Text, "[^0-9]") && first_c != '-')
             {
                 System.Windows.MessageBox.Show("Please enter only numbers.");
                 ((System.Windows.Controls.TextBox)sender).Text = ((System.Windows.Controls.TextBox)sender).Text.Remove(((System.Windows.Controls.TextBox)sender).Text.Length - 1);
